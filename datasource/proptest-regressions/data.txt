@@ -1,0 +1,9 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 0414833e62b58e55187da5cd3db3ea9db1b481996c8c52f15a06a9ddd032280b # shrinks to ref dataslice = DataSlice { data: [], offset: 6, range: 0..0 }
+cc e113dece84582822ee222dbf902a18a9ba1c4f65a16f144643f12a23e3fa8c26 # shrinks to ref dataslice = DataSlice { data: [[105]], offset: 0, range: 1..2 }
+cc 40897040bf591fcfc2db1107f0b4a56f7bc7a78befdd055306ae458c52481f34 # shrinks to ref dataslice = DataSlice { data: [[165]], offset: 0, range: 1..2 }
