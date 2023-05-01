@@ -1,6 +1,6 @@
 use std::{borrow::Cow, ops::Range, sync::Arc};
 
-use crate::DataSource;
+use crate::{error, DataSource};
 
 /// A slice of data from a DataSource.
 ///
@@ -75,6 +75,16 @@ impl DataSlice {
         }
     }
 
+    /// Length of slice in bytes.
+    pub fn len(&self) -> usize {
+        self.range.len()
+    }
+
+    /// True is slice represents no data.
+    pub fn is_empty(&self) -> bool {
+        self.range.is_empty()
+    }
+
     /// Return the range of data in the slice.
     pub fn range(&self) -> Range<u64> {
         self.abs_range(&self.range)
@@ -116,7 +126,11 @@ impl DataSlice {
     }
 
     fn local_range(&self, range: &Range<u64>) -> Range<usize> {
-        debug_assert!(range.start >= self.offset, "Range {range:?} offset {}", self.offset);
+        debug_assert!(
+            range.start >= self.offset,
+            "Range {range:?} offset {}",
+            self.offset
+        );
         (range.start - self.offset) as usize..(range.end - self.offset) as usize
     }
 
@@ -180,11 +194,11 @@ fn range_intersect<'a, T: Ord>(a: &'a Range<T>, b: &'a Range<T>) -> Range<&'a T>
 
 #[async_trait::async_trait]
 impl DataSource for DataSlice {
-    async fn get_data(&self, range: Range<u64>) -> anyhow::Result<Option<DataSlice>> {
+    async fn get_data(&self, range: Range<u64>) -> error::Result<Option<DataSlice>> {
         Ok(Some(self.sub_slice(range)))
     }
 
-    async fn size(&self) -> anyhow::Result<Option<u64>> {
+    async fn size(&self) -> error::Result<Option<u64>> {
         Ok(Some(self.range.len() as u64))
     }
 }
